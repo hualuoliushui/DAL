@@ -26,33 +26,37 @@ namespace DAL.DAOFactory
 
         static Factory()
         {
-            Mutex mutex = new Mutex(false, "FactoryMutex");
+            //Mutex mutex = new Mutex(false, "FactoryMutex");
 
-            mutex.WaitOne();
+            //if (DAOS == null)
+            //{
+            //    mutex.WaitOne();
+            //    if (DAOS == null)
+            //    {
+            //        DAOS = new Dictionary<Type, object>();
+            //    }
+            //    mutex.ReleaseMutex();
+            //}
 
-            if (DAOS == null)
-            {
-                DAOS = new Dictionary<Type, object>();
-            }
-
-            mutex.ReleaseMutex();
         }
 
         public static T getInstance<T>() where T : DAOBase, new()
         {
-            Mutex mutex = new Mutex(false, "FactoryInstanceMutex");
+            return new T();
+            //Mutex mutex = new Mutex(false, "FactoryInstanceMutex");
 
-            mutex.WaitOne();
+            ////如果没有对应的对象类型
+            //if (!DAOS.ContainsKey(typeof(T)))
+            //{
+            //    mutex.WaitOne();
+            //    if (!DAOS.ContainsKey(typeof(T)))
+            //    {
+            //        DAOS.Add(typeof(T), new T());
+            //    }
+            //    mutex.ReleaseMutex();
+            //}
 
-            //如果没有对应的对象类型
-            if (!DAOS.ContainsKey(typeof(T)))
-            {
-                DAOS.Add(typeof(T), new T());
-            }
-
-            mutex.ReleaseMutex();
-
-            return (T)DAOS[typeof(T)];
+            //return (T)DAOS[typeof(T)];
         }
     }
 }

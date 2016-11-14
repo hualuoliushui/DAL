@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using DAL.DB;
 using System.Data;
 using System.Reflection;
+using System.Threading;
 
 namespace DAL.Base
 {
@@ -42,39 +43,22 @@ namespace DAL.Base
         protected string databaseTableName;
 
         /// <summary>
-        /// 应在子类的构造函数中赋值
-        /// </summary>
-        public int IDMax;
-
-        /// <summary>
-        /// 返回比当前IDmax大1的ID值
-        /// </summary>
-        /// <returns></returns>
-        public int getID()
-        {
-            //原子加
-            System.Threading.Interlocked.Increment(ref IDMax);
-            return IDMax;
-        }
-
-        /// <summary>
         /// 返回当前数据库中以databaseTableName+ID命名的主键的最大值。用于插入下一条数据。
         /// </summary>
         /// <returns></returns>
-        protected int getIDMax()
+        protected static int getIDMax(string tableName)
         {
-            Object lockObject = new object();
-            lock (lockObject)
+            Mutex mutex = new Mutex(false, "IDMaxMutex");
+
+            mutex.WaitOne();
+            string commandText = "select max(" + tableName + "ID) from " + tableName + " ;";
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, null);
+            string id = dt.Rows[0][0].ToString();
+            if (string.IsNullOrWhiteSpace(id))
             {
-                string commandText = "select max(" + databaseTableName + "ID) from " + databaseTableName + " ;";
-                DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, null);
-                string id = dt.Rows[0][0].ToString();
-                if (string.IsNullOrWhiteSpace(id))
-                {
-                    return 0;
-                }
-                return Int32.Parse(id);
+                return 0;
             }
+            return Int32.Parse(id);
         }
 
         //=========================================================

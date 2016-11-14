@@ -23,11 +23,12 @@ namespace DAL.DB
             switch (DBTYPE)
             {
                 case 0://oleDB
-                    while (oleDB==null)
-                    {
-                        oleDB = new OleDB();
-                    }
-                    return oleDB;
+                    //while (oleDB==null)
+                    //{
+                    //    oleDB = new OleDB();
+                    //}
+                    //return oleDB;
+                    return new OleDB();
                 case 1://mysqlDB
                     while (mysqlDB == null)
                     {

@@ -1,25 +1,33 @@
-﻿using System.Collections.Generic;
-using System.Data;
-using System;
-
-using DAL.DAOVO;
-using DAL.DB;
+﻿
 using DAL.Base;
 
-using System.Reflection;
+using System.Threading;
 
 namespace DAL.DAO
 {
     public class PersonDAO : DAOBase
     {
-        /// <summary>
-        /// 构造函数中，将表名赋值为person(因为user为access数据库中的关键字，使用时需加中括号[]，不符合mysql数据库的要求，故将其换成person
-        /// </summary>
+        //本地静态字段
+        static int IDMax;
+
+        //本地静态字段
+        static string TableName = "person";
+
+        static PersonDAO()
+        {
+            IDMax = getIDMax(TableName);
+        }
+
         public PersonDAO()
         {
-            databaseTableName = "person";
-            IDMax = getIDMax();
+            //赋值父类动态字段
+            databaseTableName = TableName;
+        }
 
+        public static int getID()
+        {
+            Interlocked.Increment(ref IDMax);
+            return IDMax;
         }
     }
 }
