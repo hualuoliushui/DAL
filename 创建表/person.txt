@@ -1,0 +1,10 @@
+create table person(
+	personID Int(32) NOT NULL,
+	personName varchar(255) NOT NULL UNIQUE,
+	personPassword varchar(255) NOT NULL,
+	personDepartment varchar(255) NOT NULL,
+	personJob varchar(255) NOT NULL,
+	personDescription varchar(255) default NULL,
+	personAvailable int(32) NOT NULL,
+	primary key(personID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;
