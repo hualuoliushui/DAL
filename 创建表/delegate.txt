@@ -1,0 +1,12 @@
+create table delegate(
+	delegateID Int(32) NOT NULL,
+	isSignIn Boolean DEFAULT FALSE,
+	personMeetingRole Int(32) DEFAULT 0,
+	deviceID Int(32) NOT NULL,
+	meetingID Int(32) NOT NULL,
+	personID Int(32) NOT NULL,
+	CONSTRAINT PK_DELEGATEID primary key(delegateID),
+	CONSTRAINT FK_DELEGATE_DEVICEID foreign key(deviceID) references device(deviceID),
+	CONSTRAINT FK_DELEGATE_MEETINGID foreign key(meetingID) references meeting(meetingID),
+	CONSTRAINT FD_DELEGATE_PERSONID foreign key(personID) references person(personID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DAOVO
 {
-    class DelegateVO
+    public class DelegateVO
     {
         public int delegateID { set; get; }
         public bool isSignIn { set; get; }

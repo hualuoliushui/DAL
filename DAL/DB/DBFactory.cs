@@ -10,10 +10,6 @@ namespace DAL.DB
     {
         private static int DBTYPE = GetDBTYPE();
 
-        private static MysqlDB mysqlDB = new MysqlDB();
-
-        private static OleDB oleDB = new OleDB();
-
         private static int GetDBTYPE()
         {
             return Int32.Parse(ConfigurationManager.AppSettings["DBTYPE"]);
@@ -23,18 +19,9 @@ namespace DAL.DB
             switch (DBTYPE)
             {
                 case 0://oleDB
-                    //while (oleDB==null)
-                    //{
-                    //    oleDB = new OleDB();
-                    //}
-                    //return oleDB;
                     return new OleDB();
                 case 1://mysqlDB
-                    while (mysqlDB == null)
-                    {
-                        mysqlDB = new MysqlDB();
-                    }
-                    return mysqlDB;
+                    return new MysqlDB();
                 default:
                     return null;
             }

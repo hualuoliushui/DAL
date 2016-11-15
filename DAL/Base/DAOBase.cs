@@ -34,7 +34,7 @@ namespace DAL.Base
     /// <summary>
     /// 抽象类
     /// </summary>
-    public  abstract class DAOBase
+    public abstract class DAOBase
     {
         /// <summary>
         /// databaseTableName：数据库中的相对应的表名。应注意：access数据库中的关键字，在此不能作为表名或表中字段。
@@ -94,6 +94,20 @@ namespace DAL.Base
 
         //========================================================
 
+        //========================================================
+
+        /// <summary>
+        /// 检查表中是否有数据
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        private bool checkDataTable(DataTable dt)
+        {
+            return dt != null && dt.Rows.Count != 0;
+        }
+
+        //===========================================================
+        #region 查询
         /// <summary>
         /// 获取表中所有数据
         /// </summary>
@@ -101,19 +115,18 @@ namespace DAL.Base
         /// <returns></returns>
         public List<T> getAll<T>() where T : new()
         {
-            List<T> list = new List<T>();
-
+           
             string commandText = "select * from " + databaseTableName + " order by " + databaseTableName + "ID asc;";
 
             DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, null);
             
             //检查表中是否有数据，
-            //第一行，第一列为主键，不可能为空
-            if (dt == null && string.Compare(dt.Rows[0][0].ToString(), "") == 0)
+            if (!checkDataTable(dt))
             {
                 return null;
             }
 
+            List<T> list = new List<T>();
             foreach (DataRow row in dt.Rows)
             {
                 T t = new T();
@@ -136,8 +149,6 @@ namespace DAL.Base
             {
                 return null;
             }
-
-            List<T> list = new List<T>();
 
             string commandText = "select * from " + databaseTableName + " where ";
             List<Parameter> parameters = new List<Parameter>();
@@ -169,13 +180,12 @@ namespace DAL.Base
             DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, parameters);
 
             //检查表中是否有数据，
-            //第一行，第一列为主键，不可能为空
-            if (dt == null && string.Compare(dt.Rows[0][0].ToString(), "") == 0)
+            if (!checkDataTable(dt))
             {
                 return null;
             }
 
-
+            List<T> list = new List<T>();
             foreach (DataRow row in dt.Rows)
             {
                 T t = new T();
@@ -194,26 +204,82 @@ namespace DAL.Base
         /// <returns></returns>
         public T getOne<T>(int id) where T : new()
         {
-            T t = new T();
-
             string commandText = "select * from " + databaseTableName + " where " + databaseTableName + "ID=@id;";
             List<Parameter> parameters = new List<Parameter>();
             parameters.Add(new Parameter { name = "id", value = id });
             DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, parameters);
 
             //检查表中是否有数据，
-            //第一行，第一列为主键，不可能为空
-            if (dt == null && string.Compare(dt.Rows[0][0].ToString(), "") == 0)
+            if (!checkDataTable(dt))
             {
                 return default(T);
             }
 
-            this.setT<T>(ref t, dt.Rows[0]);
+            T t = new T();
+            setT<T>(ref t, dt.Rows[0]);
 
             return t;    
         }
 
+        /// <summary>
+        /// 获取第一行数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public T getOne<T>(Dictionary<string, object> where) where T : new()
+        {
+            if (where == null || where.Count == 0)
+            {
+                return default(T);
+            }
 
+            List<T> list = new List<T>();
+
+            string commandText = "select * from " + databaseTableName + " where ";
+            List<Parameter> parameters = new List<Parameter>();
+
+            //构造参数化sql语句，parameter.key与表中字段一致，
+            bool first = true;
+            foreach (var parameter in where)
+            {
+                if (!first)
+                {
+                    commandText += " and " + parameter.Key + "=@" + parameter.Key;
+                }
+                else
+                {
+                    commandText += parameter.Key + "=@" + parameter.Key;
+                    first = false;
+                }
+
+                parameters.Add(
+                    new Parameter
+                    {
+                        name = parameter.Key,
+                        value = parameter.Value
+                    });
+            }
+
+            commandText += " ;";
+
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, parameters);
+
+            //检查表中是否有数据，
+            if (!checkDataTable(dt))
+            {
+                return default(T);
+            }
+
+            T t = new T();
+            setT<T>(ref t, dt.Rows[0]);
+            //成功返回
+            return t;
+        }
+
+        #endregion
+
+        #region 插入
         /// <summary>
         /// 数据库中的插入操作
         /// 这里使用T的反射来赋值sql语句中的参数，
@@ -231,7 +297,7 @@ namespace DAL.Base
             }
 
             //注意，紧跟着@之后的字符串，要与vo中的属性名一致，sql语句与vo中属性的声明顺序一致
-            string commandText = " insert into " + databaseTableName + " values  (";
+            string commandText = "Insert into " + databaseTableName + " values  (";
             List<Parameter> parameters = new List<Parameter>();
 
             bool first = true;
@@ -253,6 +319,9 @@ namespace DAL.Base
             return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
         }
 
+        #endregion
+
+        #region 删除
         /// <summary>
         ///  删除 （具有唯一主键）表中的一条数据
         ///  数据库重新设计才能使用，设计成int类型的唯一主键,databaseTableName+ID为主键字段
@@ -311,6 +380,128 @@ namespace DAL.Base
             return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
         }
 
+        #endregion
+
+        #region 更新
+        /// <summary>
+        /// 使用指定主键更新数据
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int update(Dictionary<string, object> set,int id)
+        {
+            if ( set ==null || set.Count == 0)
+            {
+                return -1;
+            }
+
+            string commandText = "update " + databaseTableName + " set ";
+            List<Parameter> parameters = new List<Parameter>();
+
+            //构造参数化sql语句，parameter.key与表中字段一致，
+            bool first = true;
+            foreach (var parameter in set)
+            {
+                if (!first)
+                {
+                    commandText += " , " + parameter.Key + "=@" + parameter.Key;
+                }
+                else
+                {
+                    commandText += parameter.Key + "=@" + parameter.Key;
+                    first = false;
+                }
+
+                parameters.Add(
+                    new Parameter
+                    {
+                        name = parameter.Key,
+                        value = parameter.Value
+                    });
+            }
+
+            commandText += " where " + databaseTableName + "ID=@id;";
+            parameters.Add(
+                new Parameter
+                {
+                    name = "id",
+                    value = id
+                });
+
+            return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+        }
+
+        /// <summary>
+        /// 更新指定的数据
+        /// </summary>
+        /// <param name="set"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int update(Dictionary<string, object> set,Dictionary<string, object> where)
+        {
+            if (where == null || where.Count == 0 
+                || set ==null || set.Count == 0)
+            {
+                return -1;
+            }
+
+            string commandText = "update " + databaseTableName + " set ";
+            List<Parameter> parameters = new List<Parameter>();
+
+            //构造参数化sql语句，parameter.key与表中字段一致，
+            bool first = true;
+            foreach (var parameter in set)
+            {
+                if (!first)
+                {
+                    commandText += " , " + parameter.Key + "=@" + parameter.Key;
+                }
+                else
+                {
+                    commandText += parameter.Key + "=@" + parameter.Key;
+                    first = false;
+                }
+
+                parameters.Add(
+                    new Parameter
+                    {
+                        name = parameter.Key,
+                        value = parameter.Value
+                    });
+            }
+
+            commandText += " where ";
+
+            first = true;
+            foreach (var parameter in where)
+            {
+                if (!first)
+                {
+                    commandText += " and " + parameter.Key + "=@" + parameter.Key;
+                }
+                else
+                {
+                    commandText += parameter.Key + "=@" + parameter.Key;
+                    first = false;
+                }
+
+                parameters.Add(
+                    new Parameter
+                    {
+                        name = parameter.Key,
+                        value = parameter.Value
+                    });
+            }
+
+            commandText += " ;";
+
+            return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+        }
+
+        #endregion
+
+        #region 测试
         /// <summary>
         /// 删除某个表中的所有数据，，测试时使用
         /// </summary>
@@ -320,5 +511,7 @@ namespace DAL.Base
             string commandText = "delete from " + databaseTableName + ";";
             return DBFactory.GetInstance().ExecuteNonQuery(commandText, null);
         }
+
+        #endregion
     }
 }

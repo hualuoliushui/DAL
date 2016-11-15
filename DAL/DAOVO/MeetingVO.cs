@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace DAL.DAOVO
 {
-    class MeetingVO
+    public class MeetingVO
     {
         public int meetingID { set; get; }
         public string meetingName { set; get; }
         public string meetingSummary { set; get; }
+        public int meetingDuration { set; get; }
         public DateTime meetingToStartTime { set; get; }
         public DateTime meetingStartedTime { set; get; }
         public int meetingStatus { set; get; }

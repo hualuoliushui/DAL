@@ -1,0 +1,7 @@
+create table device(
+	deviceID Int(32) NOT NULL,
+	IMEI varchar(255) NOT NULL UNIQUE,
+	deviceIndex Int(32) NOT NULL UNIQUE,
+	deviceState Int(32) DEFAULT 0,
+	CONSTRAINT PK_DEVICEID primary key(deviceID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

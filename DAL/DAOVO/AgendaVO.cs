@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DAOVO
 {
-    class AgendaVO
+    public class AgendaVO
     {
         public int agendaID { set; get; }
         public string agendaName { set; get; }

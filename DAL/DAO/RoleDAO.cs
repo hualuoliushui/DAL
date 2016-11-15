@@ -27,5 +27,10 @@ namespace DAL.DAO
             Interlocked.Increment(ref IDMax);
             return IDMax;
         }
+
+        public static void init()
+        {
+
+        }
     }
 }

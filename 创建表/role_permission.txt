@@ -1,0 +1,8 @@
+create table role_permission(
+	role_permissionID Int(32) NOT NULL,
+	roleID Int(32) NOT NULL,
+	permissionID Int(32) NOT NULL,
+	CONSTRAINT PK_ROLE_PERMISSIONID primary key(role_permissionID),
+	CONSTRAINT FK_ROLE_PERMISSION_ROLEID foreign key(roleID) references role(roleID),
+	CONSTRAINT FK_ROLE_PERMISSION_PERMISSIONID foreign key(permissionID) references permission(permissionID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

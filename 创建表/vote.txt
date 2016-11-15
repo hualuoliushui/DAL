@@ -1,0 +1,11 @@
+create table vote(
+	voteID Int(32) NOT NULL,
+	voteName varchar(255) NOT NULL,
+	voteIndex Int(32) NOT NULL,
+	voteDescription varchar(255) DEFAULT "",
+	voteType Int(32) NOT NULL,
+	vateStatus Int(32) DEFAULT 1,
+	agendaID Int(32) NOT NULL,
+	CONSTRAINT PK_VOTEID primary key(voteID),
+	CONSTRAINT FK_VOTE_AGENDAID foreign key(agendaID) references agenda(agendaID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

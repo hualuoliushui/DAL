@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DAOVO
 {
-    class PermissionVO
+    public class PermissionVO
     {
         public int permissionID { set; get; }
 

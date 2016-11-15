@@ -8,7 +8,7 @@ using DAL.Base;
 using System.Threading;
 namespace DAL.DAO
 {
-    class MeetingPlaceDAO : DAOBase
+    public class MeetingPlaceDAO : DAOBase
     {
         //本地静态字段
         static int IDMax;

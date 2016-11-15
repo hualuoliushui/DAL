@@ -8,7 +8,7 @@ using DAL.Base;
 using System.Threading;
 namespace DAL.DAO
 {
-    class FileDAO : DAOBase
+    public class FileDAO : DAOBase
     {
        //本地静态字段
         static int IDMax;

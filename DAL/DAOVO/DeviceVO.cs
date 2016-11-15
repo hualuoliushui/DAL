@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DAOVO
 {
-    class DeviceVO
+    public class DeviceVO
     {
         public int deviceID { set; get; }
         public string IMEI { set; get; }

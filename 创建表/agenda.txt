@@ -1,0 +1,11 @@
+create table agenda(
+	agendaID Int(32) NOT NULL,
+	agendaName varchar(255) NOT NULL,
+	agendaIndex Int(32) NOT NULL,
+	agendaDuration Int(32) DEFAULT 0,
+	meetingID Int(32) NOT NULL,
+	personID Int(32) NOT NULL,
+	CONSTRAINT PK_AGENDAID primary key(agendaID),
+	CONSTRAINT FK_AGENDA_MEETINGID foreign key(meetingID) references meeting(meetingID),
+	CONSTRAINT FK_AGENDA_PERSONID foreign key(personID) references person(personID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

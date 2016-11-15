@@ -1,0 +1,10 @@
+create table file(
+	fileID Int(32) NOT NULL,
+	fileName varchar(255) NOT NULL,
+	fileIndex Int(32) NOT NULL,
+	fileSize Int(32) NOT NULL,
+	filePath varchar(255) NOT NULL UNIQUE,
+	agendaID Int(32) NOT NULL,
+	CONSTRAINT PK_FILEID primary key(fileID),
+	CONSTRAINT FK_FILE_AGENDAID foreign key(agendaID) references agenda(agendaID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

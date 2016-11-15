@@ -80,6 +80,9 @@
     <Compile Include="DB\OleDB.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\TestDAL.cs" />
+    <Compile Include="Test\TestOperator.cs" />
+    <Compile Include="Test\TestPrint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

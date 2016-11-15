@@ -1,5 +1,5 @@
 create table role(
 	roleID Int(32) NOT NULL,
-	roleName varchar(255) NOT NULL,
-	primary key(roleID)
+	roleName varchar(255) NOT NULL UNIQUE,
+	CONSTRAINT PK_ROLEID primary key(roleID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;

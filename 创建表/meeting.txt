@@ -1,0 +1,15 @@
+create table meeting(
+	meetingID Int(32) NOT NULL,
+	meetingName varchar(255) NOT NULL UNIQUE,
+	meetingSummary varchar(255) DEFAULT "",
+	meetingDuration Int(32) DEFAULT 0,
+	meetingToStartTime DateTime DEFAULT now(),
+	meetingStartedTime DateTime DEFAULT now(),
+	meetingStatus Int(32) DEFAULT 1,
+	meetingUpdateStatus Int(32) DEFAULT 0,
+	meetingPlaceID Int(32) NOT NULL,
+	personID Int(32) NOT NULL,
+	CONSTRAINT PK_MEETINGID primary key(meetingID),
+	CONSTRAINT FK_MEETING_MEETINGPLACEID foreign key(meetingPlaceID) references meetingPlace(meetingPlaceID),
+	CONSTRAINT FK_MEETING_PERSONID foreign key(personID) references person(personID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

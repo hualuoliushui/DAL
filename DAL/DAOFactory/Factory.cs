@@ -17,46 +17,9 @@ namespace DAL.DAOFactory
 {
     public class Factory
     {
-        /// <summary>
-        /// 使用单例
-        /// 保证同一个表，同一时刻只能调用一次 getIDMax()
-        /// </summary>
-        /// 
-        private static Dictionary<Type, object> DAOS;
-
-        static Factory()
-        {
-            //Mutex mutex = new Mutex(false, "FactoryMutex");
-
-            //if (DAOS == null)
-            //{
-            //    mutex.WaitOne();
-            //    if (DAOS == null)
-            //    {
-            //        DAOS = new Dictionary<Type, object>();
-            //    }
-            //    mutex.ReleaseMutex();
-            //}
-
-        }
-
         public static T getInstance<T>() where T : DAOBase, new()
         {
-            return new T();
-            //Mutex mutex = new Mutex(false, "FactoryInstanceMutex");
-
-            ////如果没有对应的对象类型
-            //if (!DAOS.ContainsKey(typeof(T)))
-            //{
-            //    mutex.WaitOne();
-            //    if (!DAOS.ContainsKey(typeof(T)))
-            //    {
-            //        DAOS.Add(typeof(T), new T());
-            //    }
-            //    mutex.ReleaseMutex();
-            //}
-
-            //return (T)DAOS[typeof(T)];
+            return (T)(new T());
         }
     }
 }

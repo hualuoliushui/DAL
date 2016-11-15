@@ -1,0 +1,8 @@
+create table voteOption(
+	voteOptionID Int(32) NOT NULL,
+	voteOptionName varchar(255) NOT NULL,
+	voteOptionIndex Int(32) NOT NULL,
+	voteID Int(32) NOT NULL,
+	CONSTRAINT PK_VOTEOPTIONID primary key(voteOptionID),
+	CONSTRAINT FK_VOTEOPTION_VOTEID foreign key(voteID) references vote(voteID)
+)CHARACTER SET utf8 COLLATE utf8_general_ci;

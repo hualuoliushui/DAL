@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL.DAOVO
 {
-    class FileVO
+    public class FileVO
     {
         public int fileID { set; get; }
         public string fileName { set; get; }
