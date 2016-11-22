@@ -14,10 +14,11 @@ namespace DAL.DAO
         static int IDMax;
 
         //本地静态字段
-        static string TableName = "role_permission";
+        static string TableName;
 
         static Role_PermissionDAO()
         {
+            TableName = "role_permission";
             IDMax = getIDMax(TableName);
         }
 

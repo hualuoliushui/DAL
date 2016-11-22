@@ -8,11 +8,18 @@ namespace DAL.DB
 {
     public class DBFactory
     {
-        private static int DBTYPE = GetDBTYPE();
+        private static int DBTYPE;
+
+        static DBFactory()
+        {
+            DBTYPE = GetDBTYPE();
+        }
+       
 
         private static int GetDBTYPE()
         {
-            return Int32.Parse(ConfigurationManager.AppSettings["DBTYPE"]);
+            int i =  Int32.Parse(ConfigurationManager.AppSettings["DBTYPE"]);
+            return i;
         }
 
         public static DB GetInstance(){

@@ -20,6 +20,6 @@ namespace DAL.DAOVO
 
         public string personDescription { set; get; }
 
-        public int personStatus { set; get; }
+        public int personState { set; get; }
     }
 }

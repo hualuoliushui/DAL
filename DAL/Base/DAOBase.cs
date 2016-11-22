@@ -51,13 +51,23 @@ namespace DAL.Base
             Mutex mutex = new Mutex(false, "IDMaxMutex");
 
             mutex.WaitOne();
-            string commandText = "select max(" + tableName + "ID) from " + tableName + " ;";
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, null);
+
+            StringBuilder commandText = new StringBuilder();
+            commandText.Append("select max(");
+            commandText.Append(tableName);
+            commandText.Append("ID) from ");
+            commandText.Append(tableName);
+            commandText.Append(";");
+           
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), null);
             string id = dt.Rows[0][0].ToString();
             if (string.IsNullOrWhiteSpace(id))
             {
+                mutex.ReleaseMutex();
                 return 0;
             }
+
+            mutex.ReleaseMutex();
             return Int32.Parse(id);
         }
 
@@ -115,10 +125,14 @@ namespace DAL.Base
         /// <returns></returns>
         public List<T> getAll<T>() where T : new()
         {
-           
-            string commandText = "select * from " + databaseTableName + " order by " + databaseTableName + "ID asc;";
+            StringBuilder commandText = new StringBuilder();
+            commandText.Append("select * from ");
+            commandText.Append(databaseTableName);
+            commandText.Append(" order by ");
+            commandText.Append(databaseTableName);
+            commandText.Append("ID asc;");
 
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, null);
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), null);
             
             //检查表中是否有数据，
             if (!checkDataTable(dt))
@@ -149,8 +163,11 @@ namespace DAL.Base
             {
                 return null;
             }
+            StringBuilder commandText = new StringBuilder();
+            commandText.Append("select * from ");
+            commandText.Append(databaseTableName);
+            commandText.Append(" where ");
 
-            string commandText = "select * from " + databaseTableName + " where ";
             List<Parameter> parameters = new List<Parameter>();
 
             //构造参数化sql语句，parameter.key与表中字段一致，
@@ -159,11 +176,16 @@ namespace DAL.Base
             {
                 if (!first)
                 {
-                    commandText += " and " + parameter.Key + "=@" + parameter.Key;
+                    commandText.Append(" and ");
+                    commandText.Append(parameter.Key);
+                    commandText.Append("=@");
+                    commandText.Append(parameter.Key);
                 }
                 else
                 {
-                    commandText +=  parameter.Key + "=@" + parameter.Key;
+                    commandText.Append(parameter.Key);
+                    commandText.Append("=@");
+                    commandText.Append(parameter.Key);
                     first = false;
                 }
 
@@ -175,9 +197,9 @@ namespace DAL.Base
                     });
             }
 
-            commandText += " ;";
+            commandText.Append(";");
 
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, parameters);
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
 
             //检查表中是否有数据，
             if (!checkDataTable(dt))
@@ -204,10 +226,16 @@ namespace DAL.Base
         /// <returns></returns>
         public T getOne<T>(int id) where T : new()
         {
-            string commandText = "select * from " + databaseTableName + " where " + databaseTableName + "ID=@id;";
+            StringBuilder commandText = new StringBuilder();
+            commandText.Append("select * from ");
+            commandText.Append(databaseTableName);
+            commandText.Append(" where ");
+            commandText.Append(databaseTableName);
+            commandText.Append("ID=@id;");
+
             List<Parameter> parameters = new List<Parameter>();
             parameters.Add(new Parameter { name = "id", value = id });
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, parameters);
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
 
             //检查表中是否有数据，
             if (!checkDataTable(dt))
@@ -236,7 +264,10 @@ namespace DAL.Base
 
             List<T> list = new List<T>();
 
-            string commandText = "select * from " + databaseTableName + " where ";
+            StringBuilder commandText = new StringBuilder();
+            commandText.Append("select * from ");
+            commandText.Append(databaseTableName);
+            commandText.Append(" where ");
             List<Parameter> parameters = new List<Parameter>();
 
             //构造参数化sql语句，parameter.key与表中字段一致，
@@ -245,11 +276,16 @@ namespace DAL.Base
             {
                 if (!first)
                 {
-                    commandText += " and " + parameter.Key + "=@" + parameter.Key;
+                    commandText.Append(" and ");
+                    commandText.Append(parameter.Key);
+                    commandText.Append("=@");
+                    commandText.Append(parameter.Key);
                 }
                 else
                 {
-                    commandText += parameter.Key + "=@" + parameter.Key;
+                    commandText.Append(parameter.Key);
+                    commandText.Append("=@");
+                    commandText.Append(parameter.Key);
                     first = false;
                 }
 
@@ -261,9 +297,9 @@ namespace DAL.Base
                     });
             }
 
-            commandText += " ;";
+            commandText.Append(";");
 
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText, parameters);
+            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
 
             //检查表中是否有数据，
             if (!checkDataTable(dt))
@@ -297,26 +333,42 @@ namespace DAL.Base
             }
 
             //注意，紧跟着@之后的字符串，要与vo中的属性名一致，sql语句与vo中属性的声明顺序一致
-            string commandText = "Insert into " + databaseTableName + " values  (";
+            StringBuilder commandText = new StringBuilder();
+            commandText.Append("insert into ");
+            commandText.Append(databaseTableName);
+            commandText.Append(" (");
+
+            StringBuilder sub = new StringBuilder();
+            sub.Append(" values(");
+
             List<Parameter> parameters = new List<Parameter>();
 
             bool first = true;
             foreach (PropertyInfo p in t.GetType().GetProperties())
             {
                 if (!first){
-                    commandText += ",@" + p.Name;
+                    commandText.Append(",");
+                    commandText.Append(p.Name);
+
+                    sub.Append(",@");
+                    sub.Append(p.Name);
                 }
                 else
                 {
-                    commandText += "@" + p.Name;
-                    first = false;
-                } 
+                    commandText.Append(p.Name);
 
+                    sub.Append("@");
+                    sub.Append(p.Name);
+
+                    first = false;
+                }
                 parameters.Add(new Parameter { name = p.Name, value = p.GetValue(t) });
             }
-            commandText += ");";
+            commandText.Append(" ) ");
+            sub.Append(");");
+            commandText.Append(sub);
 
-            return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+            return DBFactory.GetInstance().ExecuteNonQuery(commandText.ToString(), parameters);
         }
 
         #endregion

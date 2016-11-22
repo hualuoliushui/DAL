@@ -10,14 +10,16 @@ namespace DAL.DAO
 {
     public class MeetingPlaceDAO : DAOBase
     {
+        
+        //本地静态字段
+        static string TableName;
+
         //本地静态字段
         static int IDMax;
 
-        //本地静态字段
-        static string TableName = "meetingPlace";
-
         static MeetingPlaceDAO()
         {
+            TableName = "meetingPlace";
             IDMax = getIDMax(TableName);
         }
 

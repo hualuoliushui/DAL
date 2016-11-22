@@ -12,7 +12,7 @@ namespace DAL.DAOVO
 
         public string meetingPlaceName { set; get; }
 
-        public int meetingCapacity { set; get; }
+        public int meetingPlaceCapacity { set; get; }
 
         public int meetingPlaceState { set; get; }
     }

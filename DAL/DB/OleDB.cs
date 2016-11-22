@@ -33,15 +33,18 @@ namespace DAL.DB
                             }
                             //排除null
                             if (parameter.value == null) parameter.value = "";
-                            com.Parameters.AddWithValue(parameter.name,(object)(parameter.value));
+                            com.Parameters.AddWithValue(parameter.name,(parameter.value));
                             
                         }
                     }
                     return com.ExecuteNonQuery();
                 }
+                catch (Exception e)
+                {
+                    return -1;
+                }
                 finally
                 {
-                    conn.Close();
                 }
             }
         }
@@ -79,7 +82,6 @@ namespace DAL.DB
                 }
                 finally
                 {
-                    conn.Close();
                 }
             }
         }

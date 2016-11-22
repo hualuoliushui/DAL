@@ -36,7 +36,7 @@ namespace DAL.DB
                     Console.WriteLine("{0}", e.StackTrace);
                 }
                 finally{
-                    conn.Close();
+
                 }
             }
             return -1;
@@ -69,7 +69,7 @@ namespace DAL.DB
                 }
                 finally
                 {
-                    conn.Close();
+
                 }
             }
         }

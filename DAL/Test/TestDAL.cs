@@ -106,7 +106,7 @@ namespace DAL.Test
             //        personDepartment = string.Format("华工{0}", personID),
             //        personJob = string.Format("学生{0}", personID),
             //        personDescription = string.Format("描述{0}", personID),
-            //        personStatus = 0
+            //        personState = 0
             //    });
             //Console.WriteLine("Insert<PersonVO>()：{0}", check);
             //end = DateTime.Now;

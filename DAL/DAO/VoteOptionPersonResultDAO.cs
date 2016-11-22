@@ -14,10 +14,11 @@ namespace DAL.DAO
         static int IDMax;
 
         //本地静态字段
-        static string TableName = "voteOptionPersonResult";
+        static string TableName;
 
         static VoteOptionPersonResultDAO()
         {
+            TableName = "voteOptionPersonResult";
             IDMax = getIDMax(TableName);
         }
 

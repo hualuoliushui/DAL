@@ -5,7 +5,7 @@ create table person(
 	personDepartment varchar(255) NOT NULL,
 	personJob varchar(255) NOT NULL,
 	personDescription varchar(255) default NULL,
-	personStatus int(32) DEFAULT 0,
+	personState int(32) DEFAULT 0,
 	CONSTRAINT PK_PERSONID primary key(personID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -51,8 +51,8 @@ create table device(
 create table meetingPlace(
 	meetingPlaceID Int(32) NOT NULL,
 	meetingPlaceName varchar(255) NOT NULL UNIQUE,
-	meetingCapacity varchar(255) DEFAULT 0,
-	meetingState Int(32) DEFAULT 0,
+	meetingPlaceCapacity varchar(255) DEFAULT 0,
+	meetingPlaceState Int(32) DEFAULT 0,
 	CONSTRAINT PK_MEETINGPLACEID primary key(meetingPlaceID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;
 
