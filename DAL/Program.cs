@@ -63,7 +63,7 @@ namespace DAL
 
 
 
-            #region //webServer 权限管理
+            #region //webServer 权限管理 系统初始化数据
             ///添加超级管理员
             Console.WriteLine("添加超级管理员用户");
 
@@ -287,7 +287,7 @@ namespace DAL
             #region 组织者角色
             Console.WriteLine("建立权限(组织者角色)");
 
-            int permissionNum_org = 1;
+            int permissionNum_org = 10;
             int[] permissionIDs_org = new int[permissionNum_org];
             for (int i = 0; i < permissionNum_org; i++)
             {
@@ -306,7 +306,79 @@ namespace DAL
                     permissionName = "进入组织者首页",
                     permissionDescription = "Account-Organizor"
                 });
+            //1
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "获取会议列表",
+                    permissionDescription = "Meeting-GetMeetings"
+                });
+            //2
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "获取指定会议的基本信息",
+                    permissionDescription = "Meeting-GetMeeting"
+                });
+            //3
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "创建会议基本信息",
+                    permissionDescription = "Meeting-CreateMeeting"
+                });
+            //4
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "更新前获取会议信息",
+                    permissionDescription = "Meeting-GetMeetingForUpdate"
+                });
+            //5
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "更新会议信息",
+                    permissionDescription = "Meeting-UpdateMeeting"
+                });
+            //6
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "批量删除会议",
+                    permissionDescription = "Meeting-DeleteMeetingMultipe"
+                });
 
+            //7
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "批量删除会议",
+                    permissionDescription = "Meeting-DeleteMeetingMultipe"
+                });
+            //8
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "获取用户信息",
+                    permissionDescription = "User-GetUsers"
+                });
+            //9
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionName = "更新前获取指定用户信息",
+                    permissionDescription = "User-GetUser"
+                });
             #endregion
 
             foreach (PermissionVO vo in permissions_org)
@@ -333,13 +405,11 @@ namespace DAL
                     });
             }
 
-            #endregion
-
             foreach (Role_PermissionVO vo in role_permissions_org)
             {
                 Console.WriteLine(role_permissionDao.insert<Role_PermissionVO>(vo));
             }
-
+            #endregion
 
             //
             Console.WriteLine("建立管理员用户与角色关联");

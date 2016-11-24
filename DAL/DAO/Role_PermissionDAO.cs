@@ -28,10 +28,17 @@ namespace DAL.DAO
             databaseTableName = TableName;
         }
 
-        public static int getID()
+        public static int getID() //应该在返回之前都应该在临界区。。。
         {
+            int id = 0;
+            Mutex mutex = new Mutex(false, TableName);
+
+            mutex.WaitOne();
             Interlocked.Increment(ref IDMax);
-            return IDMax;
+            id = IDMax;
+            mutex.ReleaseMutex();
+
+            return id;
         }
     }
 }
