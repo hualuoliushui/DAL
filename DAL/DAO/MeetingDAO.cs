@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using DAL.Base;
+using DAL.DB;
 using System.Threading;
 namespace DAL.DAO
 {
@@ -39,6 +40,25 @@ namespace DAL.DAO
             mutex.ReleaseMutex();
 
             return id;
+        }
+
+        public int increateDuration(int meetingID, int agendaDuration)
+        {
+            string commandText = "update " + TableName + " set meetingDuration=(meetingDuration+@agendaDuration) where meetingID=@meetingID";
+            List<Parameter> parameters = new List<Parameter>();
+            parameters.Add(
+                new Parameter
+                {
+                    name="agendaDuration",
+                    value=agendaDuration
+                });
+            parameters.Add(
+                new Parameter
+                {
+                    name = "meetingID",
+                    value = meetingID
+                });
+            return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
         }
     }
 }

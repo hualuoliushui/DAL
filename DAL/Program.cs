@@ -72,7 +72,7 @@ namespace DAL
             int adminID = PersonDAO.getID();
 
             admin.personID = adminID;
-            admin.personName = "admin";
+            admin.personName = "管理员";
             admin.personDepartment = "##";
             admin.personJob = "##";
             admin.personDescription = "***";
@@ -90,9 +90,9 @@ namespace DAL
             roleIDs[2] = RoleDAO.getID();
 
             List<RoleVO> roles = new List<RoleVO>();
-            roles.Add(new RoleVO { roleID = roleIDs[0], roleName = "Admin" });
-            roles.Add(new RoleVO { roleID = roleIDs[1], roleName = "Organizor" });
-            roles.Add(new RoleVO { roleID = roleIDs[2], roleName = "Member" });
+            roles.Add(new RoleVO { roleID = roleIDs[0], roleName = "管理员" });
+            roles.Add(new RoleVO { roleID = roleIDs[1], roleName = "会议组织者" });
+            roles.Add(new RoleVO { roleID = roleIDs[2], roleName = "成员" });
 
             foreach (RoleVO vo in roles)
             {
@@ -287,7 +287,7 @@ namespace DAL
             #region 组织者角色
             Console.WriteLine("建立权限(组织者角色)");
 
-            int permissionNum_org = 10;
+            int permissionNum_org = 9;
             int[] permissionIDs_org = new int[permissionNum_org];
             for (int i = 0; i < permissionNum_org; i++)
             {
@@ -354,30 +354,21 @@ namespace DAL
                     permissionName = "批量删除会议",
                     permissionDescription = "Meeting-DeleteMeetingMultipe"
                 });
-
             //7
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = permissionIDs_org[permissionIndex_org++],
-                    permissionName = "批量删除会议",
-                    permissionDescription = "Meeting-DeleteMeetingMultipe"
+                    permissionName = "为参会人员获取用户信息",
+                    permissionDescription = "User-GetUsersForDelegate"
                 });
             //8
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = permissionIDs_org[permissionIndex_org++],
-                    permissionName = "获取用户信息",
-                    permissionDescription = "User-GetUsers"
-                });
-            //9
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
-                    permissionName = "更新前获取指定用户信息",
-                    permissionDescription = "User-GetUser"
+                    permissionName = "为参会人员创建用户",
+                    permissionDescription = "User-CreateForDelegate"
                 });
             #endregion
 

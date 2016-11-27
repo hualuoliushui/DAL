@@ -33,7 +33,7 @@ namespace DAL.DB
                     return com.ExecuteNonQuery();
                 }catch (Exception e)
                 {
-                    Console.WriteLine("{0}", e.StackTrace);
+                    return -1;
                 }
                 finally{
 
@@ -65,6 +65,10 @@ namespace DAL.DB
                     {
                         return ds.Tables[0];
                     }
+                    return null;
+                }
+                catch (Exception e)
+                {
                     return null;
                 }
                 finally

@@ -80,6 +80,10 @@ namespace DAL.DB
                     }
                     return null;
                 }
+                catch (Exception e)
+                {
+                    return null;
+                }
                 finally
                 {
                 }
