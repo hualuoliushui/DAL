@@ -685,6 +685,16 @@ namespace DAL
                     fileSize = 14,
                     filePath = "测试议程中的第二个附件.pdf"
                 });
+            files.Add(
+                new FileVO
+                {
+                    agendaID = 45,
+                    fileID=FileDAO.getID(),
+                    fileName="test.pdf",
+                    fileIndex=3,
+                    fileSize = 233,
+                    filePath="test/test.pdf"
+                });
 
             foreach (FileVO vo in files)
             {
