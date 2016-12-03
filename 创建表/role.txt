@@ -1,5 +1,7 @@
 create table role(
 	roleID Int(32) NOT NULL,
 	roleName varchar(255) NOT NULL UNIQUE,
+	#该角色是否必需，即业务不可缺少，默认为false
+	isIntegrant boolean DEFAULT false,
 	CONSTRAINT PK_ROLEID primary key(roleID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;

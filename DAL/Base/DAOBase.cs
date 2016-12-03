@@ -97,6 +97,10 @@ namespace DAL.Base
                 {
                     p.SetValue(t, DateTime.Parse(row[index].ToString()));
                 }
+                else if (string.Compare(typeName, "Boolean") == 0)
+                {
+                    p.SetValue(t, Boolean.Parse(row[index].ToString()));
+                }
 
                 index++;
             }
@@ -553,17 +557,6 @@ namespace DAL.Base
 
         #endregion
 
-        #region 测试
-        /// <summary>
-        /// 删除某个表中的所有数据，，测试时使用
-        /// </summary>
-        /// <returns></returns>
-        public int deleteAll()
-        {
-            string commandText = "delete from " + databaseTableName + ";";
-            return DBFactory.GetInstance().ExecuteNonQuery(commandText, null);
-        }
 
-        #endregion
     }
 }

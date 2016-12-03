@@ -6,5 +6,7 @@ create table person(
 	personJob varchar(255) NOT NULL,
 	personDescription varchar(255) default NULL,
 	personState int(32) DEFAULT 0,
+	#指示该用户是否为超级管理员，默认为false
+	isAdmin boolean default false,
 	CONSTRAINT PK_PERSONID primary key(personID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;

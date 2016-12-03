@@ -15,5 +15,6 @@ namespace DAL.DAOVO
         public int voteType { set; get; }
         public int voteStatus { set; get; }
         public int agendaID { set; get; }
+        public bool isUpdate { set; get; }
     }
 }

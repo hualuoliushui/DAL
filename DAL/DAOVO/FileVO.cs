@@ -14,5 +14,6 @@ namespace DAL.DAOVO
         public int fileSize { set; get; }
         public string filePath { set; get; }
         public int agendaID { set; get; }
+        public bool isUpdate { set; get; }
     }
 }

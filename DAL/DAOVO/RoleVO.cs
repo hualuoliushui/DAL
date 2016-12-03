@@ -11,5 +11,7 @@ namespace DAL.DAOVO
         public int roleID { set; get; }
 
         public string roleName { set; get; }
+
+        public bool isIntegrant { set; get; }
     }
 }

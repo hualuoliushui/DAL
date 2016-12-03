@@ -4,7 +4,7 @@ create table vote(
 	voteIndex Int(32) NOT NULL,
 	voteDescription varchar(255) DEFAULT "",
 	voteType Int(32) NOT NULL,
-	vateStatus Int(32) DEFAULT 1,
+	voteStatus Int(32) DEFAULT 1,
 	agendaID Int(32) NOT NULL,
 	CONSTRAINT PK_VOTEID primary key(voteID),
 	CONSTRAINT FK_VOTE_AGENDAID foreign key(agendaID) references agenda(agendaID)

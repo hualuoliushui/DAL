@@ -31,15 +31,15 @@ namespace DAL.DB
                     }
                    
                     return com.ExecuteNonQuery();
-                }catch (Exception e)
-                {
-                    return -1;
                 }
+                //catch (MySqlException mysqlException)
+                //{
+                //    return -1;
+                //}
                 finally{
 
                 }
             }
-            return -1;
         }
 
         public override DataTable ExecuteQuery(string commandText, List<Parameter> parameters)
@@ -67,10 +67,10 @@ namespace DAL.DB
                     }
                     return null;
                 }
-                catch (Exception e)
-                {
-                    return null;
-                }
+                //catch (MySqlException mysqlException)
+                //{
+                //    return null;
+                //}
                 finally
                 {
 

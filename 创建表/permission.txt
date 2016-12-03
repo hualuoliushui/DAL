@@ -1,6 +1,6 @@
 create table permission(
 	permissionID Int(32) NOT NULL,
 	permissionName varchar(255) NOT NULL UNIQUE,
-	permissionDecription varchar(255) NOT NULL UNIQUE,
+	permissionDescription varchar(255) NOT NULL UNIQUE,
 	CONSTRAINT PK_PERMISSIONID primary key(permissionID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;
