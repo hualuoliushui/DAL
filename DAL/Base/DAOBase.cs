@@ -336,7 +336,7 @@ namespace DAL.Base
                 return -1;
             }
 
-            //注意，紧跟着@之后的字符串，要与vo中的属性名一致，sql语句与vo中属性的声明顺序一致
+            // insert into [tableName] ([数据库表列名]...) values([对应列名的值]...);
             StringBuilder commandText = new StringBuilder();
             commandText.Append("insert into ");
             commandText.Append(databaseTableName);

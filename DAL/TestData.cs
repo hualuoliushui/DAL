@@ -328,6 +328,16 @@ namespace DAL
                    fileSize = 14,
                    filePath = @"\测试会议\测试议程2\干系人登记表.xlsx"
                });
+            files.Add(
+                new FileVO
+                {
+                    agendaID = agendaIDs[1],
+                    fileID = FileDAO.getID(),
+                    fileName = "test.xls",
+                    fileIndex = 3,
+                    fileSize = 14,
+                    filePath = @"\1\2\test.xls"
+                });
 
             foreach (FileVO vo in files)
             {

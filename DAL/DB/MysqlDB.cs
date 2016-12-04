@@ -32,10 +32,10 @@ namespace DAL.DB
                    
                     return com.ExecuteNonQuery();
                 }
-                //catch (MySqlException mysqlException)
-                //{
-                //    return -1;
-                //}
+                catch (MySqlException mysqlException)
+                {
+                    return -1;
+                }
                 finally{
 
                 }
@@ -67,10 +67,10 @@ namespace DAL.DB
                     }
                     return null;
                 }
-                //catch (MySqlException mysqlException)
-                //{
-                //    return null;
-                //}
+                catch (MySqlException mysqlException)
+                {
+                    return null;
+                }
                 finally
                 {
 

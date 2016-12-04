@@ -123,157 +123,172 @@ namespace DAL
             #region 添加权限（超级管理员角色)
             Console.WriteLine("添加权限（超级管理员角色)");
 
-            int permissionNum_admin = 17;
-            int[] permissionIDs_admin = new int[permissionNum_admin];
-            for (int i = 0; i < permissionNum_admin; i++)
-            {
-                //自动获取ID
-                permissionIDs_admin[i] = PermissionDAO.getID();
-            }
-
             List<PermissionVO> permissions_admin = new List<PermissionVO>();
-            int permissionIndex = 0;
 
             #region 超级管理员角色的权限列表
-            //0
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "进入管理员首页",
                     permissionDescription = "Account-Admin"
                 });
-            //1
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "查看会场",
                     permissionDescription = "MeetingPlace-GetMeetingPlaces"
                 });
-            //2
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "添加会场",
                     permissionDescription = "MeetingPlace-CreateMeetingPlace"
                 });
-            //3
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新前获取会场",
                     permissionDescription = "MeetingPlace-GetMeetingPlaceForUpdate"
                 });
-            //4
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新会场",
                     permissionDescription = "MeetingPlace-UpdateMeetingPlace"
                 });
-            //5
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新会场状态",
                     permissionDescription = "MeetingPlace-UpdateMeetingPlaceAvailable"
                 });
-            //6
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "查看设备",
                     permissionDescription = "Device-GetDevices"
                 });
-            //7
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "添加设备",
                     permissionDescription = "Device-CreateDevice"
                 });
-            //8
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新前获取设备",
                     permissionDescription = "Device-GetDeviceForUpdate"
                 });
-            //9
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新设备",
                     permissionDescription = "Device-UpdateDevice"
                 });
 
-            //10
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新设备状态",
                     permissionDescription = "Device-UpdateDeviceAvailable"
                 });
 
-            //11
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "查看用户",
                     permissionDescription = "User-GetUsers"
                 });
-            //12
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "添加用户",
                     permissionDescription = "User-CreateUser"
                 });
-            //13
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新前获取用户",
                     permissionDescription = "User-GetUserForUpdate"
                 });
-            //14
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新用户",
                     permissionDescription = "User-UpdateUser"
                 });
-            //15
+            //
             permissions_admin.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_admin[permissionIndex++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新用户状态",
                     permissionDescription = "User-UpdateUserAvailable"
                 });
-            //16
+            //
+            permissions_admin.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "导入用户信息",
+                    permissionDescription = "User-Upload"
+                });
+            //
             permissions_admin.Add(
                new PermissionVO
                {
-                   permissionID = permissionIDs_admin[permissionIndex++],
+                   permissionID = PermissionDAO.getID(),
+                   permissionName = "查看权限",
+                   permissionDescription = "Role-GetPermissions"
+               });
+            //
+            permissions_admin.Add(
+               new PermissionVO
+               {
+                   permissionID = PermissionDAO.getID(),
                    permissionName = "查看角色",
                    permissionDescription = "Role-GetRoles"
                });
-
+            //
+            permissions_admin.Add(
+               new PermissionVO
+               {
+                   permissionID = PermissionDAO.getID(),
+                   permissionName = "创建角色",
+                   permissionDescription = "Role-CreateRole"
+               });
+           
             
 
             foreach (PermissionVO vo in permissions_admin)
@@ -287,17 +302,15 @@ namespace DAL
             Console.WriteLine("建立超级管理员角色与权限关联");
 
             //管理员角色、权限
-            int[] role_permissionIDs_admin = new int[permissionNum_admin];
             List<Role_PermissionVO> role_permissions_admin = new System.Collections.Generic.List<Role_PermissionVO>();
-            for (int i = 0; i < permissionNum_admin; i++)
+            foreach (PermissionVO permissionVo in permissions_admin)
             {
-                role_permissionIDs_admin[i] = Role_PermissionDAO.getID();
                 role_permissions_admin.Add(
                     new Role_PermissionVO
                     {
-                        role_permissionID = role_permissionIDs_admin[i],
+                        role_permissionID = Role_PermissionDAO.getID(),
                         roleID = roleIDs[0],
-                        permissionID = permissionIDs_admin[i]
+                        permissionID = permissionVo.permissionID
                     });
             }
 
@@ -311,113 +324,269 @@ namespace DAL
             #region 添加权限（组织者角色）
             Console.WriteLine("建立权限(组织者角色)");
 
-            int permissionNum_org = 9;
-            int[] permissionIDs_org = new int[permissionNum_org];
-            for (int i = 0; i < permissionNum_org; i++)
-            {
-                permissionIDs_org[i] = PermissionDAO.getID();
-            }
-
             List<PermissionVO> permissions_org = new List<PermissionVO>();
-            int permissionIndex_org = 0;
 
             #region 组织者角色的权限列表
-            //0
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "进入组织者首页",
                     permissionDescription = "Account-Organizor"
                 });
-            //1
+            #region 会议
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "获取会议列表",
                     permissionDescription = "Meeting-GetMeetings"
                 });
-            //2
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "获取指定会议的基本信息",
                     permissionDescription = "Meeting-GetMeeting"
                 });
-            //3
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "创建会议基本信息",
                     permissionDescription = "Meeting-CreateMeeting"
                 });
-            //4
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新前获取会议信息",
                     permissionDescription = "Meeting-GetMeetingForUpdate"
                 });
-            //5
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "更新会议信息",
                     permissionDescription = "Meeting-UpdateMeeting"
                 });
-            //6
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "批量删除会议",
                     permissionDescription = "Meeting-DeleteMeetingMultipe"
                 });
-            //7
+            #endregion
+            ///=================================================
+            #region 参会人员
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "为参会人员获取用户信息",
                     permissionDescription = "User-GetUsersForDelegate"
                 });
-            //8
+            //
             permissions_org.Add(
                 new PermissionVO
                 {
-                    permissionID = permissionIDs_org[permissionIndex_org++],
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "为参会人员创建用户",
                     permissionDescription = "User-CreateForDelegate"
                 });
-            
-
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "获取参会人员列表",
+                    permissionDescription = "Delegate-GetDelegates"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "创建多个参会人员",
+                    permissionDescription = "Delegate-CreateDelegateMultipe"
+                });
+           
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "创建参会人员",
+                    permissionDescription = "Delegate-CreateDelegate"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "更新参会人员",
+                    permissionDescription = "Delegate-UpdateDelegate"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "删除多个参会人员",
+                    permissionDescription = "Delegate-DeleteDelegateMultipe"
+                });
+            #endregion
+            //===========================================
+            #region 议程
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "获取议程列表",
+                    permissionDescription = "Agenda-GetAgendas"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "获取主讲人列表",
+                    permissionDescription = "Delegate-GetSpeakerForAgenda"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "创建议程",
+                    permissionDescription = "Agenda-CreateAgenda"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "更新议程",
+                    permissionDescription = "Agenda-UpdateAgena"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "删除多个议程",
+                    permissionDescription = "Agenda-DeleteAgendaMultipe"
+                });
+            #endregion
+            //===========================================
+            #region 附件
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "上传附件",
+                    permissionDescription = "Document-Upload"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "下载附件",
+                    permissionDescription = "Document-Download"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "获取附件列表",
+                    permissionDescription = "Document-GetDocuments"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "删除多个附件",
+                    permissionDescription = "Document-DeleteDocumentMultipe"
+                });
+            #endregion
+            //================================================
+            #region 表决
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "获取表决列表",
+                    permissionDescription = "Vote-GetVotes"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "获取表决列表",
+                    permissionDescription = "Vote-GetVotes"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "删除多个表决",
+                    permissionDescription = "Vote-DeleteVoteMultipe"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "更新表决",
+                    permissionDescription = "Vote-UpdateVote"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "创建表决",
+                    permissionDescription = "Vote-CreateVote"
+                });
+            #endregion
             foreach (PermissionVO vo in permissions_org)
             {
                 Console.WriteLine(permissionDao.insert<PermissionVO>(vo));
             }
 
             #endregion
-
+            //==============================================
+           
             #region 组织者角色与权限关联
             Console.WriteLine("建立组织者角色与权限关联");
 
             //组织者角色、权限
-            int[] role_permissionIDs_org = new int[permissionNum_org];
             List<Role_PermissionVO> role_permissions_org = new System.Collections.Generic.List<Role_PermissionVO>();
-            for (int i = 0; i < permissionNum_org; i++)
+            foreach (PermissionVO permissionVo in permissions_org)
             {
-                role_permissionIDs_org[i] = Role_PermissionDAO.getID();
                 role_permissions_org.Add(
                     new Role_PermissionVO
                     {
-                        role_permissionID = role_permissionIDs_org[i],
+                        role_permissionID = Role_PermissionDAO.getID(),
                         roleID = roleIDs[1],
-                        permissionID = permissionIDs_org[i]
+                        permissionID = permissionVo.permissionID
                     });
             }
 
