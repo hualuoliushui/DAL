@@ -1,4 +1,5 @@
 ﻿using DAL.Base;
+using System;
 using System.Threading;
 
 namespace DAL.DAO
@@ -25,8 +26,30 @@ namespace DAL.DAO
 
         public static int getID()
         {
-            Interlocked.Increment(ref IDMax);
-            return IDMax;
+            int id = 0;
+            Mutex mutex = null;
+            try
+            {
+                mutex = new Mutex(false, TableName);
+                mutex.WaitOne();
+                Interlocked.Increment(ref IDMax);
+                id = IDMax;
+            }
+            catch (Exception e)
+            {
+                Log.LogInfo("获取" + TableName + "ID", e);
+                return -1;
+            }
+            finally
+            {
+                //释放锁
+                while (mutex != null)
+                {
+                    mutex.ReleaseMutex();
+                    mutex = null;
+                }
+            }
+            return id;
         }
     }
 }

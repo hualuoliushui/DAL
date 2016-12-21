@@ -19,6 +19,8 @@ namespace DAL
         /// </summary>
         public static void init()
         {
+            Log.DebugInfo("测试数据初始化...");
+
             PersonDAO personDao = Factory.getInstance<PersonDAO>();
             RoleDAO roleDao = Factory.getInstance<RoleDAO>();
             Person_RoleDAO person_roleDao = Factory.getInstance<Person_RoleDAO>();
@@ -51,8 +53,9 @@ namespace DAL
             #region apiServer ，会议测试数据
 
             List<DeviceVO> devices = new List<DeviceVO>();
-            int[] deviceIDs = new int[3];
-            for (int i = 0; i < 3; i++)
+            int deviceNum = 4;
+            int[] deviceIDs = new int[deviceNum];
+            for (int i = 0; i < deviceNum; i++)
             {
                 deviceIDs[i] = DeviceDAO.getID();
             }
@@ -85,7 +88,15 @@ namespace DAL
                     deviceIndex = 3,
                     deviceState = 0
                 });
-
+            //
+            devices.Add(
+                new DeviceVO
+                {
+                    deviceID = deviceIDs[3],
+                    IMEI = "862823023300520",
+                    deviceIndex = 4,
+                    deviceState = 0
+                });
             Console.WriteLine("添加设备");
             foreach (DeviceVO vo in devices)
             {
@@ -125,8 +136,8 @@ namespace DAL
             }
 
 
-            int[] personIDs = new int[3];
-            for (int i = 0; i < 3; i++)
+            int[] personIDs = new int[deviceNum];
+            for (int i = 0; i < deviceNum; i++)
             {
                 personIDs[i] = PersonDAO.getID();
             }
@@ -164,6 +175,17 @@ namespace DAL
                     personPassword = "123456",
                     personState = 0
                 });
+            persons.Add(
+                new PersonVO
+                {
+                    personID = personIDs[3],
+                    personName = "谢六",
+                    personDepartment = "华工" + personIDs[3],
+                    personJob = "学生" + personIDs[3],
+                    personDescription = "全职",
+                    personPassword = "123456",
+                    personState = 0
+                });
 
             //////////////////////////////////////
             Console.WriteLine("添加用户");
@@ -172,18 +194,18 @@ namespace DAL
                 Console.WriteLine(personDao.insert<PersonVO>(vo));
             }
 
-            int[] person_roleIDs = new int[3];
-            for (int i = 0; i < 3; i++)
+            int[] person_roleIDs = new int[deviceNum];
+            for (int i = 0; i < deviceNum; i++)
             {
                 person_roleIDs[i] = Person_RoleDAO.getID();
             }
 
             List<Person_RoleVO> person_roles = new List<Person_RoleVO>();
             //默认为无权限角色："成员"角色，roleID=3
-            person_roles.Add(new Person_RoleVO { person_roleID = person_roleIDs[0], roleID = 3, personID = personIDs[0] });
-            person_roles.Add(new Person_RoleVO { person_roleID = person_roleIDs[1], roleID = 3, personID = personIDs[1] });
-            person_roles.Add(new Person_RoleVO { person_roleID = person_roleIDs[2], roleID = 3, personID = personIDs[2] });
-
+            for (int i = 0; i < deviceNum; i++)
+            {
+                person_roles.Add(new Person_RoleVO { person_roleID = person_roleIDs[i], roleID = 3, personID = personIDs[i] });
+            }
             Console.WriteLine("添加用户角色关联");
             foreach (Person_RoleVO vo in person_roles)
             {
@@ -211,8 +233,8 @@ namespace DAL
             Console.WriteLine("添加参会人员");
 
             List<DelegateVO> delegates = new List<DelegateVO>();
-            int[] delegateIDs = new int[3];
-            for (int i = 0; i < 3; i++)
+            int[] delegateIDs = new int[deviceNum];
+            for (int i = 0; i < deviceNum; i++)
             {
                 delegateIDs[i] = DelegateDAO.getID();
             }
@@ -242,6 +264,16 @@ namespace DAL
                     delegateID = deviceIDs[2],
                     deviceID = deviceIDs[2],
                     personID = personIDs[2],
+                    meetingID = meetingID,
+                    personMeetingRole = 2,
+                    isSignIn = false
+                });
+            delegates.Add(
+                new DelegateVO
+                {
+                    delegateID = deviceIDs[3],
+                    deviceID = deviceIDs[3],
+                    personID = personIDs[3],
                     meetingID = meetingID,
                     personMeetingRole = 2,
                     isSignIn = false
@@ -329,14 +361,36 @@ namespace DAL
                    filePath = @"\测试会议\测试议程2\干系人登记表.xlsx"
                });
             files.Add(
+               new FileVO
+               {
+                   agendaID = agendaIDs[1],
+                   fileID = FileDAO.getID(),
+                   fileName = "p谷歌.pptx",
+                   fileIndex = 3,
+                   fileSize = 14,
+                   filePath = @"\测试会议\测试议程2\p谷歌.pptx"
+               });
+            
+            files.Add(
                 new FileVO
                 {
                     agendaID = agendaIDs[1],
                     fileID = FileDAO.getID(),
                     fileName = "test.xls",
-                    fileIndex = 3,
+                    fileIndex = 4,
                     fileSize = 14,
                     filePath = @"\1\2\test.xls"
+                });
+
+            files.Add(
+                new FileVO
+                {
+                    agendaID = agendaIDs[1],
+                    fileID = FileDAO.getID(),
+                    fileName = "test.pptx",
+                    fileIndex = 5,
+                    fileSize = 14,
+                    filePath = @"\测试会议\测试议程2\test.pptx"
                 });
 
             foreach (FileVO vo in files)
@@ -467,6 +521,8 @@ namespace DAL
                 }
             }
             #endregion
+
+            Log.DebugInfo("测试数据初始化结束");
         }
     }
 }

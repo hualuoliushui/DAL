@@ -331,48 +331,57 @@ namespace DAL.Base
         /// <returns></returns>
         public int insert<T>(T t)
         {
-            if (t == null)
+            try
             {
-                return -1;
-            }
-
-            // insert into [tableName] ([数据库表列名]...) values([对应列名的值]...);
-            StringBuilder commandText = new StringBuilder();
-            commandText.Append("insert into ");
-            commandText.Append(databaseTableName);
-            commandText.Append(" (");
-
-            StringBuilder sub = new StringBuilder();
-            sub.Append(" values(");
-
-            List<Parameter> parameters = new List<Parameter>();
-
-            bool first = true;
-            foreach (PropertyInfo p in t.GetType().GetProperties())
-            {
-                if (!first){
-                    commandText.Append(",");
-                    commandText.Append(p.Name);
-
-                    sub.Append(",@");
-                    sub.Append(p.Name);
-                }
-                else
+                if (t == null)
                 {
-                    commandText.Append(p.Name);
-
-                    sub.Append("@");
-                    sub.Append(p.Name);
-
-                    first = false;
+                    return -1;
                 }
-                parameters.Add(new Parameter { name = p.Name, value = p.GetValue(t) });
-            }
-            commandText.Append(" ) ");
-            sub.Append(");");
-            commandText.Append(sub);
 
-            return DBFactory.GetInstance().ExecuteNonQuery(commandText.ToString(), parameters);
+                // insert into [tableName] ([数据库表列名]...) values([对应列名的值]...);
+                StringBuilder commandText = new StringBuilder();
+                commandText.Append("insert into ");
+                commandText.Append(databaseTableName);
+                commandText.Append(" (");
+
+                StringBuilder sub = new StringBuilder();
+                sub.Append(" values(");
+
+                List<Parameter> parameters = new List<Parameter>();
+
+                bool first = true;
+                foreach (PropertyInfo p in t.GetType().GetProperties())
+                {
+                    if (!first)
+                    {
+                        commandText.Append(",");
+                        commandText.Append(p.Name);
+
+                        sub.Append(",@");
+                        sub.Append(p.Name);
+                    }
+                    else
+                    {
+                        commandText.Append(p.Name);
+
+                        sub.Append("@");
+                        sub.Append(p.Name);
+
+                        first = false;
+                    }
+                    parameters.Add(new Parameter { name = p.Name, value = p.GetValue(t) });
+                }
+                commandText.Append(" ) ");
+                sub.Append(");");
+                commandText.Append(sub);
+
+                return DBFactory.GetInstance().ExecuteNonQuery(commandText.ToString(), parameters);
+            }
+            catch (Exception e)
+            {
+                Log.LogInfo("插入数据:", e);
+                throw;
+            }  
         }
 
         #endregion

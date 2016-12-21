@@ -1,4 +1,5 @@
 ﻿using DAL.Base;
+using System;
 using System.Threading;
 
 namespace DAL.DAO
@@ -23,16 +24,31 @@ namespace DAL.DAO
             databaseTableName = TableName;
         }
 
-        public static int getID() //应该在返回之前都应该在临界区。。。
+        public static int getID() 
         {
             int id = 0;
-            Mutex mutex = new Mutex(false, TableName);
-
-            mutex.WaitOne();
-            Interlocked.Increment(ref IDMax);
-            id = IDMax;
-            mutex.ReleaseMutex();
-
+            Mutex mutex = null;
+            try
+            {
+                mutex = new Mutex(false, TableName);
+                mutex.WaitOne();
+                Interlocked.Increment(ref IDMax);
+                id = IDMax;
+            }
+            catch (Exception e)
+            {
+                Log.LogInfo("获取" + TableName + "ID", e);
+                return -1;
+            }
+            finally
+            {
+                //释放锁
+                while (mutex != null)
+                {
+                    mutex.ReleaseMutex();
+                    mutex = null;
+                }
+            }
             return id;
         }
     }

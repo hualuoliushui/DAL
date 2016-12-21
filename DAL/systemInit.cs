@@ -14,8 +14,10 @@ namespace DAL
     {
         static void Main(string[] args)
         {
+            Log.DebugInfo("数据库初始化...");
             //此函数必须单独运行，同时停止其他持有数据库的程序的运行
             reset();
+            Log.DebugInfo("数据库初始化结束");
         }
         
         /// <summary>
@@ -525,14 +527,6 @@ namespace DAL
             #endregion
             //================================================
             #region 表决
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "获取表决列表",
-                    permissionDescription = "Vote-GetVotes"
-                });
             //
             permissions_org.Add(
                 new PermissionVO

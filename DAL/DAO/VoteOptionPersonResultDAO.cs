@@ -31,13 +31,27 @@ namespace DAL.DAO
         public static int getID() //应该在返回之前都应该在临界区。。。
         {
             int id = 0;
-            Mutex mutex = new Mutex(false, TableName);
-
-            mutex.WaitOne();
-            Interlocked.Increment(ref IDMax);
-            id = IDMax;
-            mutex.ReleaseMutex();
-
+            Mutex mutex = null;
+            try
+            {
+                mutex = new Mutex(false, TableName);
+                mutex.WaitOne();
+                Interlocked.Increment(ref IDMax);
+                id = IDMax;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                //释放锁
+                while (mutex != null)
+                {
+                    mutex.ReleaseMutex();
+                    mutex = null;
+                }
+            }
             return id;
         }
     }
