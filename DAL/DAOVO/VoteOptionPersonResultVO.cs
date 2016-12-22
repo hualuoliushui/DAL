@@ -11,6 +11,5 @@ namespace DAL.DAOVO
         public int voteOptionPersonResultID { set; get; }
         public int voteOptionID { set; get; }
         public int personID { set; get; }
-        public bool isUpdate { set; get; }
     }
 }

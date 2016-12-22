@@ -1,4 +1,4 @@
-#drop database testDal;
+drop database testDal;
 create database testDal;
 use testDal;
 create table person(
@@ -149,10 +149,8 @@ create table voteOptionPersonResult(
 	voteOptionPersonResultID Int(32) NOT NULL,
 	voteOptionID Int(32) NOT NULL,
 	personID Int(32) NOT NULL,
-	voteID Int(32) NOT NULL,
 	#新增VoteID外键，便于查询
 	CONSTRAINT PK_VOTEOPTIONPERSONRESULTID primary key(voteOptionPersonResultID),
 	CONSTRAINT FK_VOTEOPTIONPERSONRESULT_VOTEOPTIONID foreign key(voteOptionID) references voteOption(voteOptionID),
-	CONSTRAINT FK_VOTEOPTIONPERSONRESULT_PERSONID foreign key(personID) references person(personID),
-	CONSTRAINT FK_VOTEOPTIONPERSONRESULT_VOTEID foreign key(voteID) references vote(voteID)
+	CONSTRAINT FK_VOTEOPTIONPERSONRESULT_PERSONID foreign key(personID) references person(personID)
 )CHARACTER SET utf8 COLLATE utf8_general_ci;

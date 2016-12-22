@@ -34,7 +34,7 @@ namespace DAL.DB
                 }
                 catch (MySqlException mysqlException)
                 {
-                    Log.LogInfo("mysql 非查询执行", mysqlException);
+                    Log.LogInfo("mysql 非查询执行 : "+commandText, mysqlException);
                     return -1;
                 }
                 finally{
@@ -70,6 +70,7 @@ namespace DAL.DB
                 }
                 catch (MySqlException mysqlException)
                 {
+                    Log.LogInfo("mysql 查询执行 : " + commandText, mysqlException);
                     return null;
                 }
                 finally

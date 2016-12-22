@@ -445,6 +445,12 @@ namespace DAL.Base
             return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
         }
 
+        //删除指定表的所有数据
+        public int deleteAll_test(string tableName)
+        {
+            return DBFactory.GetInstance().ExecuteNonQuery("delete from " + tableName + ";", null);
+        }
+
         #endregion
 
         #region 更新
