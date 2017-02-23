@@ -95,7 +95,7 @@ namespace DAL
             admin.personJob = "##";
             admin.personDescription = "***";
             admin.personPassword = "123456";
-            admin.personState = 0;
+            admin.personState = 1;
             admin.isAdmin = true;
 
             Console.WriteLine(personDao.insert<PersonVO>(admin));
@@ -343,48 +343,32 @@ namespace DAL
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取会议列表",
-                    permissionDescription = "Meeting-GetMeetings"
+                    permissionName = "展示会议",
+                    permissionDescription = "Meeting-Show_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取指定会议的基本信息",
-                    permissionDescription = "Meeting-GetMeeting"
+                    permissionName = "添加会议",
+                    permissionDescription = "Meeting-Add_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "创建会议基本信息",
-                    permissionDescription = "Meeting-CreateMeeting"
+                    permissionName = "编辑会议",
+                    permissionDescription = "Meeting-Edit_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "更新前获取会议信息",
-                    permissionDescription = "Meeting-GetMeetingForUpdate"
-                });
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "更新会议信息",
-                    permissionDescription = "Meeting-UpdateMeeting"
-                });
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "批量删除会议",
-                    permissionDescription = "Meeting-DeleteMeetingMultipe"
+                    permissionName = "删除会议",
+                    permissionDescription = "Meeting-Delete_organizor"
                 });
             #endregion
             ///=================================================
@@ -394,57 +378,32 @@ namespace DAL
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "为参会人员获取用户信息",
-                    permissionDescription = "User-GetUsersForDelegate"
+                    permissionName = "参会人员首页",
+                    permissionDescription = "Delegate-Index_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "为参会人员创建用户",
-                    permissionDescription = "User-CreateForDelegate"
+                    permissionName = "编辑参会人员",
+                    permissionDescription = "Delegate-Edit_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取参会人员列表",
-                    permissionDescription = "Delegate-GetDelegates"
+                    permissionName = "添加参会人员",
+                    permissionDescription = "Delegate-Add_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "创建多个参会人员",
-                    permissionDescription = "Delegate-CreateDelegateMultipe"
-                });
-           
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "创建参会人员",
-                    permissionDescription = "Delegate-CreateDelegate"
-                });
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "更新参会人员",
-                    permissionDescription = "Delegate-UpdateDelegate"
-                });
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "删除多个参会人员",
-                    permissionDescription = "Delegate-DeleteDelegateMultipe"
+                    permissionName = "删除参会人员",
+                    permissionDescription = "Delegate-Delete_organizor"
                 });
             #endregion
             //===========================================
@@ -454,40 +413,32 @@ namespace DAL
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取议程列表",
-                    permissionDescription = "Agenda-GetAgendas"
+                    permissionName = "议程首页",
+                    permissionDescription = "Agenda-Index_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取主讲人列表",
-                    permissionDescription = "Delegate-GetSpeakerForAgenda"
+                    permissionName = "添加议程",
+                    permissionDescription = "Agenda-Add_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "创建议程",
-                    permissionDescription = "Agenda-CreateAgenda"
+                    permissionName = "编辑议程",
+                    permissionDescription = "Agenda-Edit_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "更新议程",
-                    permissionDescription = "Agenda-UpdateAgena"
-                });
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "删除多个议程",
-                    permissionDescription = "Agenda-DeleteAgendaMultipe"
+                    permissionName = "删除议程",
+                    permissionDescription = "Agenda-Delete_organizor"
                 });
             #endregion
             //===========================================
@@ -497,8 +448,24 @@ namespace DAL
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
+                    permissionName = "附件首页",
+                    permissionDescription = "Document-Index_organizor"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
                     permissionName = "上传附件",
-                    permissionDescription = "Document-Upload"
+                    permissionDescription = "Document-Add_organizor"
+                });
+            //
+            permissions_org.Add(
+                new PermissionVO
+                {
+                    permissionID = PermissionDAO.getID(),
+                    permissionName = "转换附件",
+                    permissionDescription = "Document-StartConvert"
                 });
             //
             permissions_org.Add(
@@ -513,16 +480,8 @@ namespace DAL
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取附件列表",
-                    permissionDescription = "Document-GetDocuments"
-                });
-            //
-            permissions_org.Add(
-                new PermissionVO
-                {
-                    permissionID = PermissionDAO.getID(),
-                    permissionName = "删除多个附件",
-                    permissionDescription = "Document-DeleteDocumentMultipe"
+                    permissionName = "删除附件",
+                    permissionDescription = "Document-Delete_organizor"
                 });
             #endregion
             //================================================
@@ -532,32 +491,32 @@ namespace DAL
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "获取表决列表",
-                    permissionDescription = "Vote-GetVotes"
+                    permissionName = "表决首页",
+                    permissionDescription = "Vote-Index_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "删除多个表决",
-                    permissionDescription = "Vote-DeleteVoteMultipe"
+                    permissionName = "添加表决",
+                    permissionDescription = "Vote-Add_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "更新表决",
-                    permissionDescription = "Vote-UpdateVote"
+                    permissionName = "编辑表决",
+                    permissionDescription = "Vote-Edit_organizor"
                 });
             //
             permissions_org.Add(
                 new PermissionVO
                 {
                     permissionID = PermissionDAO.getID(),
-                    permissionName = "创建表决",
-                    permissionDescription = "Vote-CreateVote"
+                    permissionName = "删除表决",
+                    permissionDescription = "Vote-Delete_organizor"
                 });
             #endregion
             foreach (PermissionVO vo in permissions_org)

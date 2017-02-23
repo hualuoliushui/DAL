@@ -68,24 +68,24 @@ namespace DAL.DAO
             return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
         }
 
-        public int getMaxIndex(int agendaID)
-        {
-            StringBuilder commandText = new StringBuilder();
-            commandText.Append("select max(voteIndex) from ");
-            commandText.Append(databaseTableName);
-            commandText.Append(" where ");
-            commandText.Append("agendaID = @agendaID;");
+        //public int getMaxIndex(int agendaID)
+        //{
+        //    StringBuilder commandText = new StringBuilder();
+        //    commandText.Append("select max(voteIndex) from ");
+        //    commandText.Append(databaseTableName);
+        //    commandText.Append(" where ");
+        //    commandText.Append("agendaID = @agendaID;");
 
-            List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter { name = "agendaID", value = agendaID });
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
+        //    List<Parameter> parameters = new List<Parameter>();
+        //    parameters.Add(new Parameter { name = "agendaID", value = agendaID });
+        //    DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
 
-            if (dt != null && dt.Rows.Count != 0)
-            {
-                DataRow row = dt.Rows[0];
-                return Int32.Parse(row[0].ToString());
-            }
-            return 0;
-        }
+        //    if (dt != null && dt.Rows.Count != 0)
+        //    {
+        //        DataRow row = dt.Rows[0];
+        //        return Int32.Parse(row[0].ToString());
+        //    }
+        //    return 0;
+        //}
     }
 }
