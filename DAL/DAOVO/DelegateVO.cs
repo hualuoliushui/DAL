@@ -15,5 +15,6 @@ namespace DAL.DAOVO
         public int meetingID { set; get; }
         public int personID { set; get; }
         public bool isUpdate { set; get; }
+        public int seatIndex { set; get; }
     }
 }

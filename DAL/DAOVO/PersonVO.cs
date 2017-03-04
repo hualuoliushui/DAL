@@ -23,5 +23,7 @@ namespace DAL.DAOVO
         public int personState { set; get; }
 
         public bool isAdmin { set; get; }
+
+        public int personLevel { set; get; }
     }
 }

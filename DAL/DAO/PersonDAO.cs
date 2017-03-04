@@ -1,5 +1,6 @@
 ﻿
 using DAL.Base;
+using DAL.DB;
 using System;
 using System.Threading;
 
@@ -51,6 +52,13 @@ namespace DAL.DAO
                 }
             }
             return id;
+        }
+
+        //删除 除管理员之外的全部人员
+        public int deleteAll()
+        {
+            string commandText = "delete from " + TableName + " where personID!=1";
+            return DBFactory.GetInstance().ExecuteNonQuery(commandText, null);
         }
     }
 }

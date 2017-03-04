@@ -15,5 +15,7 @@ namespace DAL.DAOVO
         public int meetingPlaceCapacity { set; get; }
 
         public int meetingPlaceState { set; get; }
+
+        public int seatType { set; get; } //会场座位布置类型：
     }
 }

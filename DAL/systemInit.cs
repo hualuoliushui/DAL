@@ -566,8 +566,6 @@ namespace DAL
             #endregion
 
             #endregion
-
-
         }
     }
 }

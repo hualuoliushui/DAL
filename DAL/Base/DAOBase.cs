@@ -33,21 +33,24 @@ namespace DAL.Base
 
     /// <summary>
     /// 抽象类
+    /// 实现添加、查询、更新、删除操作的泛型方法，暂时只提供精确匹配
     /// </summary>
     public abstract class DAOBase
     {
         /// <summary>
-        /// databaseTableName：数据库中的相对应的表名。应注意：access数据库中的关键字，在此不能作为表名或表中字段。
+        /// databaseTableName：数据库中的相对应的表名。
+        /// 应注意：access数据库中的关键字，在此不能作为表名或表中字段。
         /// 测试access关键字：sql语句中，表名或字段不使用中括号[]，如果成功，则表明其中没有access数据库的关键字。
         /// </summary>
         protected string databaseTableName;
 
         /// <summary>
-        /// 返回当前数据库中以databaseTableName+ID命名的主键的最大值。用于插入下一条数据。
+        /// 返回当前数据库中以databaseTableName+ID命名的主键的最大值。用于人为分配主键，插入下一条数据。
         /// </summary>
         /// <returns></returns>
         protected static int getIDMax(string tableName)
         {
+            //使用程序级别的互斥锁。
             Mutex mutex = new Mutex(false, "IDMaxMutex");
 
             mutex.WaitOne();
@@ -60,7 +63,15 @@ namespace DAL.Base
             commandText.Append(";");
            
             DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), null);
-            string id = dt.Rows[0][0].ToString();
+            string id;
+            if (dt == null || dt.Rows.Count==0)
+            {
+                mutex.ReleaseMutex();
+                return 0;
+            }
+
+            id = dt.Rows[0][0].ToString();
+
             if (string.IsNullOrWhiteSpace(id))
             {
                 mutex.ReleaseMutex();
@@ -75,7 +86,10 @@ namespace DAL.Base
 
         /// <summary>
         /// 辅助函数
+        /// 从指定数据库中指定行
         /// 为T值对象赋值
+        /// 根据T中不同的数据类型，而确定不同的赋值方式
+        /// 强调T中的字段顺序与数据库表中的一致
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
@@ -85,21 +99,22 @@ namespace DAL.Base
             foreach (PropertyInfo p in t.GetType().GetProperties())
             {
                 string typeName = p.PropertyType.Name;
+                string value = row[index].ToString();
                 if (string.Compare(typeName, "String") == 0)
                 {
-                    p.SetValue(t, row[index].ToString());
+                    p.SetValue(t, value);
                 }
                 else if (string.Compare(typeName, "Int32") == 0)
                 {
-                    p.SetValue(t, Int32.Parse(row[index].ToString()));
+                    p.SetValue(t, Int32.Parse(value));
                 }
                 else if (string.Compare(typeName, "DateTime") == 0)
                 {
-                    p.SetValue(t, DateTime.Parse(row[index].ToString()));
+                    p.SetValue(t, DateTime.Parse(value));
                 }
                 else if (string.Compare(typeName, "Boolean") == 0)
                 {
-                    p.SetValue(t, Boolean.Parse(row[index].ToString()));
+                    p.SetValue(t, Boolean.Parse(value));
                 }
 
                 index++;
@@ -163,63 +178,75 @@ namespace DAL.Base
         /// <returns></returns>
         public List<T> getAll<T>(Dictionary<string, object> where) where T : new()
         {
-            if (where == null || where.Count == 0)
+            try
             {
-                return null;
-            }
-            StringBuilder commandText = new StringBuilder();
-            commandText.Append("select * from ");
-            commandText.Append(databaseTableName);
-            commandText.Append(" where ");
-
-            List<Parameter> parameters = new List<Parameter>();
-
-            //构造参数化sql语句，parameter.key与表中字段一致，
-            bool first = true;
-            foreach (var parameter in where)
-            {
-                if (!first)
+                if (where == null || where.Count == 0)
                 {
-                    commandText.Append(" and ");
-                    commandText.Append(parameter.Key);
-                    commandText.Append("=@");
-                    commandText.Append(parameter.Key);
+                    return null;
                 }
-                else
-                {
-                    commandText.Append(parameter.Key);
-                    commandText.Append("=@");
-                    commandText.Append(parameter.Key);
-                    first = false;
-                }
+                StringBuilder commandText = new StringBuilder();
+                commandText.Append("select * from ");
+                commandText.Append(databaseTableName);
+                commandText.Append(" where ");
 
-                parameters.Add(
-                    new Parameter
+                List<Parameter> parameters = new List<Parameter>();
+
+                //构造参数化sql语句，parameter.key与表中字段一致，
+                bool first = true;
+                foreach (var parameter in where)
+                {
+                    if (!first)
                     {
-                        name = parameter.Key,
-                        value = parameter.Value
-                    });
+                        commandText.Append(" and ");
+                        commandText.Append(parameter.Key);
+                        commandText.Append("=@");
+                        commandText.Append(parameter.Key);
+                    }
+                    else
+                    {
+                        commandText.Append(parameter.Key);
+                        commandText.Append("=@");
+                        commandText.Append(parameter.Key);
+                        first = false;
+                    }
+
+                    parameters.Add(
+                        new Parameter
+                        {
+                            name = parameter.Key,
+                            value = parameter.Value
+                        });
+                }
+
+                commandText.Append(";");
+
+                DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
+
+                //检查表中是否有数据，
+                if (!checkDataTable(dt))
+                {
+                    return null;
+                }
+
+                List<T> list = new List<T>();
+                foreach (DataRow row in dt.Rows)
+                {
+                    T t = new T();
+                    this.setT<T>(ref t, row);
+                    list.Add(t);
+                }
+                //成功返回
+                return list;
             }
-
-            commandText.Append(";");
-
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
-
-            //检查表中是否有数据，
-            if (!checkDataTable(dt))
+            catch (Exception e)
             {
-                return null;
+                //如果出现异常
+                //记录
+                Log.LogInfo("getAll<" + typeof(T).Name + ">:", e);
+                //返回空列表
+                return new List<T>();
             }
-
-            List<T> list = new List<T>();
-            foreach (DataRow row in dt.Rows)
-            {
-                T t = new T();
-                this.setT<T>(ref t, row);
-                list.Add(t);
-            }
-            //成功返回
-            return list;
+            
         }
 
         /// <summary>
@@ -230,27 +257,38 @@ namespace DAL.Base
         /// <returns></returns>
         public T getOne<T>(int id) where T : new()
         {
-            StringBuilder commandText = new StringBuilder();
-            commandText.Append("select * from ");
-            commandText.Append(databaseTableName);
-            commandText.Append(" where ");
-            commandText.Append(databaseTableName);
-            commandText.Append("ID=@id;");
-
-            List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter { name = "id", value = id });
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
-
-            //检查表中是否有数据，
-            if (!checkDataTable(dt))
+            try
             {
-                return default(T);
+                StringBuilder commandText = new StringBuilder();
+                commandText.Append("select * from ");
+                commandText.Append(databaseTableName);
+                commandText.Append(" where ");
+                commandText.Append(databaseTableName);
+                commandText.Append("ID=@id;");
+
+                List<Parameter> parameters = new List<Parameter>();
+                parameters.Add(new Parameter { name = "id", value = id });
+                DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
+
+                //检查表中是否有数据，
+                if (!checkDataTable(dt))
+                {
+                    return default(T);
+                }
+
+                T t = new T();
+                setT<T>(ref t, dt.Rows[0]);
+
+                return t;  
             }
-
-            T t = new T();
-            setT<T>(ref t, dt.Rows[0]);
-
-            return t;    
+            catch (Exception e)
+            {
+                //如果出现异常
+                //记录
+                Log.LogInfo("getOne<" + typeof(T).Name + ">:", e);
+                //返回默认值列表
+                return default(T);
+            }  
         }
 
         /// <summary>
@@ -261,60 +299,71 @@ namespace DAL.Base
         /// <returns></returns>
         public T getOne<T>(Dictionary<string, object> where) where T : new()
         {
-            if (where == null || where.Count == 0)
+            try
             {
-                return default(T);
-            }
-
-            List<T> list = new List<T>();
-
-            StringBuilder commandText = new StringBuilder();
-            commandText.Append("select * from ");
-            commandText.Append(databaseTableName);
-            commandText.Append(" where ");
-            List<Parameter> parameters = new List<Parameter>();
-
-            //构造参数化sql语句，parameter.key与表中字段一致，
-            bool first = true;
-            foreach (var parameter in where)
-            {
-                if (!first)
+                if (where == null || where.Count == 0)
                 {
-                    commandText.Append(" and ");
-                    commandText.Append(parameter.Key);
-                    commandText.Append("=@");
-                    commandText.Append(parameter.Key);
-                }
-                else
-                {
-                    commandText.Append(parameter.Key);
-                    commandText.Append("=@");
-                    commandText.Append(parameter.Key);
-                    first = false;
+                    return default(T);
                 }
 
-                parameters.Add(
-                    new Parameter
+                List<T> list = new List<T>();
+
+                StringBuilder commandText = new StringBuilder();
+                commandText.Append("select * from ");
+                commandText.Append(databaseTableName);
+                commandText.Append(" where ");
+                List<Parameter> parameters = new List<Parameter>();
+
+                //构造参数化sql语句，parameter.key与表中字段一致，
+                bool first = true;
+                foreach (var parameter in where)
+                {
+                    if (!first)
                     {
-                        name = parameter.Key,
-                        value = parameter.Value
-                    });
+                        commandText.Append(" and ");
+                        commandText.Append(parameter.Key);
+                        commandText.Append("=@");
+                        commandText.Append(parameter.Key);
+                    }
+                    else
+                    {
+                        commandText.Append(parameter.Key);
+                        commandText.Append("=@");
+                        commandText.Append(parameter.Key);
+                        first = false;
+                    }
+
+                    parameters.Add(
+                        new Parameter
+                        {
+                            name = parameter.Key,
+                            value = parameter.Value
+                        });
+                }
+
+                commandText.Append(";");
+
+                DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
+
+                //检查表中是否有数据，
+                if (!checkDataTable(dt))
+                {
+                    return default(T);
+                }
+
+                T t = new T();
+                setT<T>(ref t, dt.Rows[0]);
+                //成功返回
+                return t;
             }
-
-            commandText.Append(";");
-
-            DataTable dt = DBFactory.GetInstance().ExecuteQuery(commandText.ToString(), parameters);
-
-            //检查表中是否有数据，
-            if (!checkDataTable(dt))
+            catch (Exception e)
             {
+                //如果出现异常
+                //记录
+                Log.LogInfo("getOne<" + typeof(T).Name + ">:", e);
+                //返回默认值列表
                 return default(T);
             }
-
-            T t = new T();
-            setT<T>(ref t, dt.Rows[0]);
-            //成功返回
-            return t;
         }
 
         #endregion
@@ -379,8 +428,8 @@ namespace DAL.Base
             }
             catch (Exception e)
             {
-                Log.LogInfo("插入数据:", e);
-                throw;
+                Log.LogInfo("插入数据:"+"insert<"+typeof(T).Name+">:", e);
+                return -1;
             }  
         }
 
@@ -395,10 +444,18 @@ namespace DAL.Base
         /// <returns></returns>
         public int delete(int id)
         {
-            string commandText = "delete from " + databaseTableName + " where " + databaseTableName + "ID=@id;";
-            List<Parameter> parameters = new List<Parameter>();
-            parameters.Add(new Parameter { name = "id", value = id });
-            return (int)DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+            try
+            {
+                string commandText = "delete from " + databaseTableName + " where " + databaseTableName + "ID=@id;";
+                List<Parameter> parameters = new List<Parameter>();
+                parameters.Add(new Parameter { name = "id", value = id });
+                return (int)DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+            }
+            catch (Exception e)
+            {
+                Log.LogInfo("delete(int id): id=" + id + " :", e);
+                return -1;
+            }
         }
 
         /// <summary>
@@ -410,45 +467,61 @@ namespace DAL.Base
         /// <returns></returns>
         public int delete(Dictionary<string, object> where)
         {
-            if (where == null || where.Count==0)
+            try
             {
+                if (where == null || where.Count == 0)
+                {
+                    return -1;
+                }
+
+                string commandText = "delete from " + databaseTableName + " where ";
+                List<Parameter> parameters = new List<Parameter>();
+
+                //构造参数化sql语句，parameter.key与表中字段一致，
+                bool first = true;
+                foreach (var parameter in where)
+                {
+                    if (!first)
+                    {
+                        commandText += " and " + parameter.Key + "=@" + parameter.Key;
+                    }
+                    else
+                    {
+                        commandText += parameter.Key + "=@" + parameter.Key;
+                        first = false;
+                    }
+
+                    parameters.Add(
+                        new Parameter
+                        {
+                            name = parameter.Key,
+                            value = parameter.Value
+                        });
+                }
+
+                commandText += " ;";
+
+                return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+            }
+            catch (Exception e)
+            {
+                Log.LogInfo("delete(wherelist):", e);
                 return -1;
             }
-
-            string commandText = "delete from " + databaseTableName + " where ";
-            List<Parameter> parameters = new List<Parameter>();
-
-            //构造参数化sql语句，parameter.key与表中字段一致，
-            bool first = true;
-            foreach (var parameter in where)
-            {
-                if (!first)
-                {
-                    commandText += " and " + parameter.Key + "=@" + parameter.Key;
-                }
-                else
-                {
-                    commandText += parameter.Key + "=@" + parameter.Key;
-                    first = false;
-                }
-
-                parameters.Add(
-                    new Parameter
-                    {
-                        name = parameter.Key,
-                        value = parameter.Value
-                    });
-            }
-
-            commandText += " ;";
-
-            return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
         }
 
         //删除指定表的所有数据
         public int deleteAll_test(string tableName)
         {
-            return DBFactory.GetInstance().ExecuteNonQuery("delete from " + tableName + ";", null);
+            try
+            {
+                return DBFactory.GetInstance().ExecuteNonQuery("delete from " + tableName + ";", null);
+            }
+            catch (Exception e)
+            {
+                Log.LogInfo("deleteAll_test(" + tableName + "):", e);
+                return -1;
+            }
         }
 
         #endregion
@@ -462,45 +535,53 @@ namespace DAL.Base
         /// <returns></returns>
         public int update(Dictionary<string, object> set,int id)
         {
-            if ( set ==null || set.Count == 0)
+            try
             {
-                return -1;
-            }
-
-            string commandText = "update " + databaseTableName + " set ";
-            List<Parameter> parameters = new List<Parameter>();
-
-            //构造参数化sql语句，parameter.key与表中字段一致，
-            bool first = true;
-            foreach (var parameter in set)
-            {
-                if (!first)
+                if (set == null || set.Count == 0)
                 {
-                    commandText += " , " + parameter.Key + "=@" + parameter.Key;
-                }
-                else
-                {
-                    commandText += parameter.Key + "=@" + parameter.Key;
-                    first = false;
+                    return -1;
                 }
 
+                string commandText = "update " + databaseTableName + " set ";
+                List<Parameter> parameters = new List<Parameter>();
+
+                //构造参数化sql语句，parameter.key与表中字段一致，
+                bool first = true;
+                foreach (var parameter in set)
+                {
+                    if (!first)
+                    {
+                        commandText += " , " + parameter.Key + "=@" + parameter.Key;
+                    }
+                    else
+                    {
+                        commandText += parameter.Key + "=@" + parameter.Key;
+                        first = false;
+                    }
+
+                    parameters.Add(
+                        new Parameter
+                        {
+                            name = parameter.Key,
+                            value = parameter.Value
+                        });
+                }
+
+                commandText += " where " + databaseTableName + "ID=@id;";
                 parameters.Add(
                     new Parameter
                     {
-                        name = parameter.Key,
-                        value = parameter.Value
+                        name = "id",
+                        value = id
                     });
+
+                return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
             }
-
-            commandText += " where " + databaseTableName + "ID=@id;";
-            parameters.Add(
-                new Parameter
-                {
-                    name = "id",
-                    value = id
-                });
-
-            return DBFactory.GetInstance().ExecuteNonQuery(commandText, parameters);
+            catch (Exception)
+            {
+                
+                throw;
+            }
         }
 
         /// <summary>

@@ -53,6 +53,7 @@ CREATE TABLE `delegate` (
   `meetingID` int(32) NOT NULL,
   `personID` int(32) NOT NULL,
   `isUpdate` tinyint(1) DEFAULT '0',
+  `seatIndex` int(32) DEFAULT '0',
   PRIMARY KEY (`delegateID`),
   KEY `FK_DELEGATE_DEVICEID` (`deviceID`),
   KEY `FK_DELEGATE_MEETINGID` (`meetingID`),
@@ -145,10 +146,12 @@ CREATE TABLE `meetingplace` (
   `meetingPlaceName` varchar(255) NOT NULL,
   `meetingPlaceCapacity` varchar(255) DEFAULT '0',
   `meetingPlaceState` int(32) DEFAULT '0',
+  `seatType` int(32) DEFAULT '0',
   PRIMARY KEY (`meetingPlaceID`),
   UNIQUE KEY `meetingPlaceName` (`meetingPlaceName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `permission`
@@ -168,6 +171,25 @@ CREATE TABLE `permission` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `longTable`
+--
+
+DROP TABLE IF EXISTS `longTable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `longTable` (
+  `longTableID` int(32) NOT NULL,
+  `upNum` int(32)  DEFAULT '0',
+  `downNum` int(32) DEFAULT '0',
+  `leftNum` int(32) DEFAULT '0',
+  `rightNum` int(32) DEFAULT '0',
+  `meetingPlaceID` int(32) NOT NULL,
+  PRIMARY KEY (`longTableID`),
+  CONSTRAINT `FK_LONGTABLE_MEETINGPLACEID` FOREIGN KEY (`meetingPlaceID`) REFERENCES `meetingplace` (`meetingPlaceID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `person`
 --
 
@@ -183,6 +205,7 @@ CREATE TABLE `person` (
   `personDescription` varchar(255) DEFAULT NULL,
   `personState` int(32) DEFAULT '0',
   `isAdmin` tinyint(1) DEFAULT '0',
+  `personLevel` int(32) DEFAULT '0',
   PRIMARY KEY (`personID`),
   UNIQUE KEY `personName` (`personName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
